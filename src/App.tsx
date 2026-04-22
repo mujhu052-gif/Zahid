@@ -5,20 +5,11 @@
 
 import { motion, AnimatePresence } from 'motion/react';
 import { 
-  Package, 
-  Truck, 
-  BarChart3, 
-  ShieldCheck, 
   ArrowRight, 
   Menu, 
   X, 
-  Cpu, 
-  Globe, 
   Zap,
   ChevronRight,
-  Database,
-  Search,
-  LayoutDashboard,
   Youtube,
   Smartphone,
   Facebook,
@@ -26,7 +17,8 @@ import {
   UserCheck,
   Wand2,
   MessageCircle,
-  CheckCircle2
+  CheckCircle2,
+  Instagram
 } from 'lucide-react';
 import { useState, useEffect, ReactNode } from 'react';
 
@@ -49,6 +41,47 @@ interface FeatureProps {
 }
 
 // --- Components ---
+
+const BackgroundIcons = () => {
+  const icons = [
+    <Facebook className="w-4 h-4" />,
+    <Youtube className="w-4 h-4" />,
+    <Instagram className="w-4 h-4" />,
+    <Smartphone className="w-4 h-4" />, // TikTok
+    <MessageCircle className="w-4 h-4" />,
+  ];
+
+  return (
+    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden opacity-20">
+      {[...Array(30)].map((_, i) => (
+        <motion.div
+          key={i}
+          initial={{ 
+            x: Math.random() * 100 + '%', 
+            y: Math.random() * 100 + '%',
+            opacity: 0 
+          }}
+          animate={{ 
+            x: [null, Math.random() * 100 + '%'], 
+            y: [null, Math.random() * 100 + '%'],
+            opacity: [0, 0.4, 0],
+            rotate: [0, 360]
+          }}
+          transition={{ 
+            duration: 15 + Math.random() * 25, 
+            repeat: Infinity, 
+            ease: "linear" 
+          }}
+          className="absolute"
+        >
+          <div className="p-1.5 glass rounded-lg border border-white/10">
+            {icons[i % icons.length]}
+          </div>
+        </motion.div>
+      ))}
+    </div>
+  );
+};
 
 const ServiceModal = ({ 
   service, 
@@ -139,6 +172,105 @@ const ServiceModal = ({
   );
 };
 
+const ProfileSection = () => {
+  const socialIcons = [
+    { icon: <Facebook className="w-4 h-4" />, color: 'bg-blue-600' },
+    { icon: <Youtube className="w-4 h-4" />, color: 'bg-red-600' },
+    { icon: <Smartphone className="w-4 h-4" />, color: 'bg-black' }, // TikTok
+    { icon: <Instagram className="w-4 h-4" />, color: 'bg-gradient-to-tr from-yellow-500 via-pink-500 to-purple-500' },
+    { icon: <MessageCircle className="w-4 h-4" />, color: 'bg-green-500' },
+    { icon: <Zap className="w-4 h-4" />, color: 'bg-yellow-500' },
+  ];
+
+  return (
+    <div className="relative w-64 h-64 md:w-80 md:h-80 mx-auto">
+      {/* Circling Icons Container */}
+      <motion.div 
+        animate={{ rotate: 360 }}
+        transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+        className="absolute inset-0 z-20"
+      >
+        {socialIcons.map((item, i) => (
+          <div 
+            key={i}
+            className="absolute"
+            style={{
+              top: '50%',
+              left: '50%',
+              transform: `rotate(${(i * (360 / socialIcons.length))}deg) translate(145px, -50%)`,
+            }}
+          >
+             <motion.div 
+               animate={{ rotate: -360 }}
+               transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+               className={`w-10 h-10 ${item.color} rounded-xl flex items-center justify-center text-white shadow-2xl border-2 border-white/30 backdrop-blur-md transform hover:scale-125 transition-all cursor-pointer`}
+             >
+               {item.icon}
+             </motion.div>
+          </div>
+        ))}
+      </motion.div>
+
+      {/* Main Profile with Glass Effect */}
+      <div className="absolute inset-0 rounded-full p-4 bg-white/5 backdrop-blur-md border border-white/20 shadow-[0_0_50px_rgba(37,99,235,0.2)]">
+        <div className="w-full h-full rounded-full overflow-hidden border-2 border-white/20 bg-slate-800 group relative">
+          <img 
+            src="/profile.jpg" 
+            alt="WHS Founder" 
+            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+            onError={(e) => {
+              (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=400";
+            }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-blue-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+        </div>
+      </div>
+      
+      {/* Small orbiting dots and logos */}
+      {[...Array(6)].map((_, i) => (
+        <motion.div
+          key={`dot-${i}`}
+          animate={{ rotate: -360 }}
+          transition={{ duration: 12 + i * 2, repeat: Infinity, ease: "linear" }}
+          className="absolute inset-0 pointer-events-none"
+        >
+          <div 
+            className="w-1.5 h-1.5 bg-blue-400 rounded-full blur-[1px] absolute"
+            style={{
+              top: '50%',
+              left: '50%',
+              transform: `rotate(${i * 60}deg) translate(180px, -50%)`,
+            }}
+          />
+        </motion.div>
+      ))}
+
+      {/* Extra Outer Orbit for density */}
+      <motion.div 
+        animate={{ rotate: -360 }}
+        transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+        className="absolute inset-0 z-10 opacity-40"
+      >
+        {[<Instagram />, <Facebook />, <Youtube />, <Smartphone />].map((icon, i) => (
+          <div 
+            key={`outer-${i}`}
+            className="absolute"
+            style={{
+              top: '50%',
+              left: '50%',
+              transform: `rotate(${i * 90 + 45}deg) translate(200px, -50%) scale(0.6)`,
+            }}
+          >
+             <div className="w-8 h-8 glass rounded-lg flex items-center justify-center text-white/50 border border-white/10">
+               {icon}
+             </div>
+          </div>
+        ))}
+      </motion.div>
+    </div>
+  );
+};
+
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -160,12 +292,16 @@ const Navbar = () => {
         </div>
 
         <div className="hidden md:flex items-center gap-8 text-sm font-medium">
-          {['Services', 'Case Studies', 'Technology', 'About'].map((item) => (
-            <a key={item} href={`#${item.toLowerCase().replace(' ', '-')}`} className="text-white/70 hover:text-white transition-colors">
+          {['Home', 'Services', 'About', 'Contact'].map((item) => (
+            <a 
+              key={item} 
+              href={item === 'Home' ? '#' : `#${item.toLowerCase()}`} 
+              className="text-white/70 hover:text-white transition-colors"
+            >
               {item}
             </a>
           ))}
-          <button className="bg-white text-slate-900 px-5 py-2 rounded-xl text-sm font-bold hover:bg-blue-50 transition-all">
+          <button className="bg-blue-600 text-white px-5 py-2 rounded-xl text-sm font-bold hover:bg-blue-500 transition-all shadow-lg shadow-blue-900/20">
             Get Started
           </button>
         </div>
@@ -181,10 +317,15 @@ const Navbar = () => {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="md:hidden fixed inset-x-0 top-[72px] bg-slate-900 border-b border-slate-800 p-6 flex flex-col gap-4"
+            className="md:hidden fixed inset-x-0 top-[72px] bg-slate-900 border-b border-slate-800 p-6 flex flex-col gap-4 shadow-2xl z-[100]"
           >
-            {['Solutions', 'Features', 'Network', 'Analytics'].map((item) => (
-              <a key={item} href={`#${item.toLowerCase()}`} className="text-lg font-medium text-slate-300" onClick={() => setIsOpen(false)}>
+            {['Home', 'Services', 'About', 'Contact'].map((item) => (
+              <a 
+                key={item} 
+                href={item === 'Home' ? '#' : `#${item.toLowerCase()}`} 
+                className="text-lg font-medium text-slate-300" 
+                onClick={() => setIsOpen(false)}
+              >
                 {item}
               </a>
             ))}
@@ -195,74 +336,62 @@ const Navbar = () => {
   );
 };
 
-const LiveTerminal = () => {
-  const [logs, setLogs] = useState<string[]>([]);
-  const messages = [
-    "[SYSTEM] TikTok monetization approved for client: Ahmed_K",
-    "[AUTO] Facebook In-Stream Ads enabled: Fatima_Store",
-    "[WHS] YouTube Milestone: 100k view target reached",
-    "[FLEET] Content delivery optimized via AI model v3",
-    "[SEC] Payment verified: Order #40129",
-    "[SYNC] Ad campaign 'Growth_Spring' is active",
-    "[ALERT] New AI Tool 'CaptionAI Pro' now in store",
-  ];
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setLogs((prev) => [...prev.slice(-4), messages[Math.floor(Math.random() * messages.length)]]);
-    }, 2000);
-    return () => clearInterval(interval);
-  }, []);
-
-  return (
-    <div className="bg-slate-950 rounded-xl border border-slate-800 font-mono text-[11px] p-4 h-48 flex flex-col gap-1 overflow-hidden glow-blue/10">
-      <div className="flex justify-between items-center mb-2 border-b border-slate-800 pb-2">
-        <div className="flex gap-1.5">
-          <div className="w-2 h-2 rounded-full bg-red-500" />
-          <div className="w-2 h-2 rounded-full bg-yellow-500" />
-          <div className="w-2 h-2 rounded-full bg-green-500" />
-        </div>
-        <span className="text-slate-500 uppercase tracking-widest text-[9px]">Live_System_Monitor</span>
-      </div>
-      <div className="flex flex-col gap-1">
-        {logs.map((log, i) => (
-          <motion.div 
-            initial={{ opacity: 0, x: -5 }} 
-            animate={{ opacity: 1, x: 0 }} 
-            key={i} 
-            className={`${log.includes('ALERT') ? 'text-red-400' : log.includes('SYSTEM') ? 'text-sky-400' : 'text-slate-400'}`}
-          >
-            <span className="text-slate-600 font-mono mr-2">12:04:{20 + i}</span>
-            {log}
-          </motion.div>
-        ))}
-        {logs.length === 0 && <div className="text-slate-700 italic">Initializing stream...</div>}
-      </div>
-    </div>
-  );
-};
-
 const FeatureCard = ({ service, delay = 0, onClick }: FeatureProps) => (
   <motion.div 
     initial={{ opacity: 0, y: 20 }}
     whileInView={{ opacity: 1, y: 0 }}
     viewport={{ once: true }}
-    transition={{ delay }}
+    transition={{ 
+      duration: 0.5,
+      delay 
+    }}
+    whileHover={{ 
+      y: -10, 
+      scale: 1.02,
+      rotateX: 2,
+      rotateY: -2,
+      perspective: 1000
+    }}
     onClick={() => onClick(service)}
-    className="p-8 rounded-3xl bg-white/5 backdrop-blur-lg border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all group transform hover:scale-[1.02] cursor-pointer relative overflow-hidden"
+    className="p-8 rounded-3xl bg-white/5 backdrop-blur-xl border border-white/10 hover:border-blue-400/50 transition-colors group cursor-pointer relative overflow-hidden"
+    style={{ transformStyle: 'preserve-3d' }}
   >
-    <div className="w-12 h-12 bg-blue-500/20 rounded-xl flex items-center justify-center mb-6 text-blue-400 group-hover:bg-blue-600 group-hover:text-white transition-all">
-      {service.icon}
-    </div>
-    <h3 className="text-xl font-bold text-white mb-3 tracking-tight">{service.title}</h3>
-    <p className="text-white/40 text-sm leading-relaxed mb-6">{service.shortDesc}</p>
+    {/* Sweeping Shine Effect */}
+    <div className="absolute inset-x-0 -top-full h-[200%] bg-gradient-to-b from-transparent via-white/10 to-transparent skew-y-12 transition-transform duration-1000 group-hover:translate-y-[100%] pointer-events-none" />
     
-    <div className="flex items-center justify-between mt-auto pt-4 border-t border-white/5">
-      <span className="text-emerald-400 font-bold">{service.price}</span>
-      <span className="text-white/30 text-[10px] font-bold uppercase tracking-widest flex items-center gap-1 group-hover:text-white transition-colors">
-        View Details <ChevronRight className="w-3 h-3" />
+    {/* Background Glow */}
+    <div className="absolute -inset-24 bg-blue-600/10 blur-[100px] opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+
+    <motion.div 
+      whileHover={{ 
+        rotate: 360, 
+        scale: 1.1,
+        z: 20
+      }}
+      transition={{ duration: 0.6, type: "spring" }}
+      className="w-14 h-14 bg-blue-500/20 rounded-2xl flex items-center justify-center mb-6 text-blue-400 group-hover:bg-blue-600 group-hover:text-white transition-all shadow-lg relative z-10"
+      style={{ transformStyle: 'preserve-3d' }}
+    >
+      {service.icon}
+    </motion.div>
+    
+    <h3 className="text-xl font-bold text-white mb-3 tracking-tight group-hover:text-blue-200 transition-colors relative z-10" style={{ transform: 'translateZ(15px)' }}>{service.title}</h3>
+    <p className="text-white/40 text-sm leading-relaxed mb-6 group-hover:text-white/70 transition-colors relative z-10" style={{ transform: 'translateZ(10px)' }}>{service.shortDesc}</p>
+    
+    <div className="flex items-center justify-between mt-auto pt-6 border-t border-white/5 relative z-10" style={{ transform: 'translateZ(5px)' }}>
+      <motion.span 
+        whileHover={{ scale: 1.1 }}
+        className="text-emerald-400 font-bold text-lg"
+      >
+        {service.price}
+      </motion.span>
+      <span className="text-white/30 text-[10px] font-bold uppercase tracking-widest flex items-center gap-1 group-hover:text-blue-400 transition-colors">
+        Learn More <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
       </span>
     </div>
+
+    {/* Floating accent dot */}
+    <div className="absolute -top-4 -right-4 w-24 h-24 bg-blue-400/5 rounded-full blur-3xl group-hover:bg-blue-400/15 transition-colors pointer-events-none" />
   </motion.div>
 );
 
@@ -333,6 +462,7 @@ export default function App() {
   };
   return (
     <div className="min-h-screen relative overflow-hidden bg-slate-900 text-white selection:bg-blue-500/30">
+      <BackgroundIcons />
       {/* Background Mesh Gradients */}
       <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-blue-600/30 rounded-full blur-[120px] -z-10"></div>
       <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-indigo-700/30 rounded-full blur-[100px] -z-10"></div>
@@ -369,135 +499,63 @@ export default function App() {
               Unlock monetization on TikTok, YouTube, and Facebook. We help creators and brands 
               work smarter with cutting-edge AI tools and expert management.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4">
-              <button className="bg-blue-600 px-8 py-4 rounded-xl font-bold hover:bg-blue-500 shadow-lg shadow-blue-900/40 transition-all flex items-center justify-center gap-2">
-                Explore Solutions <ArrowRight className="w-4 h-4" />
-              </button>
-              <button className="bg-white/5 backdrop-blur-sm border border-white/10 px-8 py-4 rounded-xl font-bold hover:bg-white/10 transition-all">
-                Watch Demo
-              </button>
-            </div>
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.5 }}
+              className="pt-4"
+            >
+              <motion.div
+                animate={{ 
+                  y: [0, -20, 0],
+                  scale: [1, 1.05, 1],
+                  rotate: [0, 2, -2, 0]
+                }}
+                transition={{ 
+                  duration: 6, 
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+                className="inline-flex items-center gap-6"
+              >
+                <div className="relative group">
+                  <div className="absolute -inset-4 bg-blue-500/20 rounded-full blur-2xl group-hover:bg-blue-500/40 transition-colors animate-pulse" />
+                  <div className="w-24 h-24 md:w-32 md:h-32 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-3xl flex items-center justify-center shadow-2xl relative border-2 border-white/20 backdrop-blur-xl">
+                    <span className="text-4xl md:text-6xl font-black text-white tracking-tighter drop-shadow-lg">WHS</span>
+                    
+                    {/* Decorative glass ring */}
+                    <div className="absolute -inset-2 border border-white/10 rounded-3xl animate-[spin_10s_linear_infinity]" />
+                  </div>
+                </div>
+                
+                <div className="space-y-1">
+                  <div className="text-xl font-bold text-white tracking-tight uppercase">WHS Systems</div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
+                    <span className="text-xs font-mono text-emerald-400 uppercase tracking-widest">Active Monetization Engine</span>
+                  </div>
+                </div>
+              </motion.div>
+            </motion.div>
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
+            initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1 }}
-            className="relative"
+            className="flex items-center justify-center pt-10 md:pt-0"
           >
-            <div className="relative z-10 glass rounded-3xl p-2 border-slate-700/50 shadow-2xl">
-              <div className="bg-slate-900 rounded-2xl overflow-hidden aspect-square md:aspect-video flex flex-col">
-                {/* Simulated Dashboard UI */}
-                <div className="p-4 border-b border-slate-800 flex justify-between items-center bg-slate-950/50">
-                  <div className="flex gap-4 items-center">
-                    <div className="w-32 h-3 bg-slate-800 rounded-full overflow-hidden">
-                      <motion.div 
-                        animate={{ width: ['20%', '80%', '50%', '90%'] }}
-                        transition={{ duration: 5, repeat: Infinity }}
-                        className="h-full bg-blue-500" 
-                      />
-                    </div>
-                    <span className="text-blue-500 font-mono text-[10px]">MONETIZATION LIVE</span>
-                  </div>
-                  <LayoutDashboard className="w-4 h-4 text-slate-500" />
-                </div>
-                
-                <div className="p-6 flex-1 grid grid-cols-2 gap-4">
-                  <div className="col-span-2 relative bg-slate-950/50 rounded-xl p-4 border border-slate-800/50 overflow-hidden">
-                    <div className="flex justify-between items-end mb-4">
-                      <div>
-                        <div className="text-[10px] text-slate-500 uppercase font-bold mb-1">Weekly Creator Earnings</div>
-                        <div className="text-2xl font-bold text-white">$12,890.00</div>
-                      </div>
-                      <div className="text-[10px] text-green-500">+24% growth</div>
-                    </div>
-                    {/* Visual Bar Chart */}
-                    <div className="flex items-end gap-1 h-12">
-                      {[40, 70, 45, 90, 65, 80, 55, 95, 75, 85].map((h, i) => (
-                        <div key={i} className="flex-1 bg-blue-400/20 rounded-t-sm relative">
-                           <motion.div 
-                            initial={{ height: 0 }}
-                            animate={{ height: `${h}%` }}
-                            transition={{ delay: i * 0.1, duration: 1 }}
-                            className="absolute bottom-0 inset-x-0 bg-blue-500/60 rounded-t-sm"
-                           />
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                  
-                  <div className="bg-slate-950/50 rounded-xl p-4 border border-slate-800/50">
-                    <div className="text-[10px] text-slate-500 uppercase font-bold mb-1">Active Accounts</div>
-                    <div className="flex items-center gap-2 mt-2">
-                      <div className="w-2 h-2 rounded-full bg-green-500 pulse" />
-                      <span className="text-white font-bold">542 Managed</span>
-                    </div>
-                  </div>
-                  <div className="bg-slate-950/50 rounded-xl p-4 border border-slate-800/50">
-                    <div className="text-[10px] text-slate-500 uppercase font-bold mb-1">AI Tool Usage</div>
-                    <div className="flex items-center gap-2 mt-2">
-                      <div className="w-2 h-2 rounded-full bg-blue-500" />
-                      <span className="text-white font-bold text-sm tracking-tighter">9.2M Queries</span>
-                    </div>
-                  </div>
-                  
-                  <div className="col-span-2 mt-2">
-                    <LiveTerminal />
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            {/* Floating Elements for depth */}
-            <motion.div 
-              animate={{ y: [0, -20, 0] }}
-              transition={{ duration: 4, repeat: Infinity }}
-              className="absolute -top-10 -right-10 w-24 h-24 glass rounded-2xl flex items-center justify-center -rotate-12 z-0"
-            >
-              <Database className="text-sky-500 w-10 h-10" />
-            </motion.div>
-            <motion.div 
-              animate={{ y: [0, 20, 0] }}
-              transition={{ duration: 3, repeat: Infinity, delay: 0.5 }}
-              className="absolute -bottom-10 -left-10 w-20 h-20 glass rounded-full flex items-center justify-center rotate-12 z-0"
-            >
-              <Cpu className="text-indigo-500 w-8 h-8" />
-            </motion.div>
+            <ProfileSection />
           </motion.div>
+
         </div>
       </section>
 
-      {/* Statistics Footer Bar */}
-      <section className="mt-12 py-12 border-t border-white/10 bg-transparent">
-        <div className="max-w-7xl mx-auto px-6 flex justify-between items-center flex-wrap gap-12">
-          <div className="flex gap-12">
-            {[
-              { label: 'Audits Completed', value: '1.2M+' },
-              { label: 'Uptime Reliability', value: '99.9%' },
-              { label: 'Global Partners', value: '250+' }
-            ].map((stat, i) => (
-              <div key={i}>
-                <div className="text-2xl font-bold text-white">{stat.value}</div>
-                <div className="text-xs text-white/40 uppercase tracking-widest font-semibold">{stat.label}</div>
-              </div>
-            ))}
-          </div>
-          <div className="flex items-center gap-4 text-sm text-white/40">
-            <span>Trusted by industrial leaders</span>
-            <div className="flex gap-3 opacity-50">
-              <div className="w-8 h-8 bg-white/20 rounded-full"></div>
-              <div className="w-8 h-8 bg-white/20 rounded-full"></div>
-              <div className="w-8 h-8 bg-white/20 rounded-full"></div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Features Section */}
-      <section id="services" className="py-24 max-w-7xl mx-auto px-6">
+      {/* Services Section */}
+      <section id="services" className="py-24 max-w-7xl mx-auto px-6 border-t border-white/10">
         <div className="mb-16 text-center max-w-2xl mx-auto">
-          <h2 className="text-3xl md:text-5xl font-bold text-white mb-6 tracking-tight leading-[1.1]">Complete Monetization Suite</h2>
-          <p className="text-white/40 leading-relaxed">Everything you need to grow and monetize your social presence with Dubai's #1 digital growth agency.</p>
+          <h2 className="text-3xl md:text-5xl font-bold text-white mb-6 tracking-tight leading-[1.1]">Our Services</h2>
+          <p className="text-white/40 leading-relaxed text-lg">Premium social media growth and monetization solutions tailored for Dubai's creators.</p>
         </div>
 
         <div className="grid md:grid-cols-3 gap-6">
@@ -511,7 +569,6 @@ export default function App() {
           ))}
         </div>
 
-        {/* WhatsApp Button at bottom of services */}
         <div className="mt-20 text-center">
           <a 
             href="https://wa.me/923403516101" 
@@ -525,96 +582,121 @@ export default function App() {
         </div>
       </section>
 
-      {/* Pricing Section */}
-      <section id="pricing" className="py-24 max-w-7xl mx-auto px-6 border-t border-white/10">
-        <div className="mb-16 text-center max-w-2xl mx-auto">
-          <h2 className="text-3xl md:text-5xl font-bold text-white mb-6 tracking-tight leading-[1.1]">Transparent Pricing</h2>
-          <p className="text-white/40 leading-relaxed">Choose the plan that fits your current goals and scale with us as you grow.</p>
-        </div>
-
-        <div className="grid md:grid-cols-3 gap-8">
-          {[
-            { 
-              name: 'Starter Plan', 
-              price: '$49', 
-              desc: 'Perfect for new creators just getting started.',
-              features: ['1 Core Service', 'Standard Timeline', 'Email & Chat Support', 'Progress Tracking']
-            },
-            { 
-              name: 'Standard Plan', 
-              price: '$99', 
-              featured: true,
-              desc: 'Great for small businesses and growing creators.',
-              features: ['Up to 3 Services', 'Faster Delivery', 'Account Manager', 'AI Tool Access', 'Weekly Reports']
-            },
-            { 
-              name: 'Growth Plan', 
-              price: '$199', 
-              desc: 'Designed for serious creators and enterprises.',
-              features: ['All Services Access', 'VIP Queue (Fastest)', 'Strategy Consultant', '24/7 WhatsApp Support', 'Full AI Store access']
-            }
-          ].map((plan, i) => (
-            <motion.div 
-              key={i}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}
-              className={`p-8 rounded-3xl border flex flex-col ${plan.featured ? 'bg-blue-600 border-blue-400 scale-105 z-10 shadow-2xl shadow-blue-500/20' : 'bg-white/5 border-white/10'}`}
-            >
-              <div className="mb-8">
-                <div className="text-sm font-bold opacity-60 uppercase tracking-widest mb-2">{plan.name}</div>
-                <div className="flex items-baseline gap-1">
-                  <span className="text-4xl font-extrabold">{plan.price}</span>
-                  <span className="text-sm opacity-60">/mo demo</span>
-                </div>
+      {/* About Section */}
+      <section id="about" className="py-24 max-w-7xl mx-auto px-6 border-t border-white/10">
+        <div className="grid md:grid-cols-2 gap-16 items-center">
+          <motion.div
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            className="space-y-8"
+          >
+            <h2 className="text-4xl md:text-5xl font-bold text-white tracking-tight leading-tight">
+              Dubai Founded. <br />
+              <span className="text-blue-400">Global Ambition.</span>
+            </h2>
+            <div className="space-y-6 text-white/60 leading-relaxed">
+              <p>
+                WHS Social Media Management was founded in Dubai with one goal: to make digital success accessible to everyone. We started as markers struggling with platform rules, and built the solution we wished existed.
+              </p>
+              <p>
+                Today, we empower thousands of creators worldwide with the tools, strategies, and expert support they need to turn social media into a sustainable source of income.
+              </p>
+            </div>
+            <div className="grid grid-cols-2 gap-8 pt-4">
+              <div>
+                <div className="text-3xl font-bold text-white">10k+</div>
+                <div className="text-xs text-white/40 uppercase tracking-widest font-bold mt-1">Creators Managed</div>
               </div>
-              <p className={`text-sm mb-8 leading-relaxed ${plan.featured ? 'text-white' : 'text-white/40'}`}>{plan.desc}</p>
-              <ul className="space-y-4 mb-10 flex-1">
-                {plan.features.map((f, j) => (
-                  <li key={j} className="flex items-center gap-3 text-sm">
-                    <CheckCircle2 className={`w-4 h-4 shrink-0 ${plan.featured ? 'text-blue-200' : 'text-blue-400'}`} />
-                    <span className={plan.featured ? 'text-white' : 'text-white/70'}>{f}</span>
-                  </li>
-                ))}
-              </ul>
-              <button className={`w-full py-4 rounded-xl font-bold transition-all ${plan.featured ? 'bg-white text-blue-600 hover:bg-blue-50' : 'bg-white/10 text-white hover:bg-white/20'}`}>
-                Choose Plan
-              </button>
-            </motion.div>
-          ))}
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-24 bg-gradient-to-b from-transparent to-sky-500/5">
-        <div className="max-w-4xl mx-auto px-6 text-center">
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.9 }}
+              <div>
+                <div className="text-3xl font-bold text-white">24/7</div>
+                <div className="text-xs text-white/40 uppercase tracking-widest font-bold mt-1">Live Support</div>
+              </div>
+            </div>
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            className="glass rounded-3xl p-12 md:p-20 relative overflow-hidden"
+            transition={{ duration: 1 }}
+            className="relative group"
           >
-            {/* Background elements */}
-            <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-sky-500/10 via-transparent to-transparent -z-10" />
-            
-            <h2 className="text-3xl md:text-5xl font-bold text-white mb-8 leading-tight">
-              Ready to Upgrade Your <br /> 
-              <span className="text-sky-400">Logistics Infrastructure?</span>
-            </h2>
-            <p className="text-slate-400 mb-10 max-w-lg mx-auto">
-              Join 500+ enterprises using WHS to streamline their operations, reduce waste, and increase throughput by up to 240%.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button className="px-10 py-5 bg-sky-500 hover:bg-sky-400 text-slate-900 rounded-2xl font-bold flex items-center justify-center gap-2 transition-all glow-blue group">
-                Get Started Now <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </button>
-              <button className="px-10 py-5 bg-slate-800 hover:bg-slate-700 text-white rounded-2xl font-bold transition-all">
-                Talk to Sales
-              </button>
+            <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-3xl blur opacity-25 group-hover:opacity-50 transition duration-1000"></div>
+            <div className="relative glass rounded-3xl p-1 overflow-hidden">
+               <img 
+                 src="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&q=80&w=800" 
+                 alt="Dubai skyline" 
+                 className="w-full h-[400px] object-cover rounded-2xl"
+               />
             </div>
           </motion.div>
         </div>
+      </section>
+
+      {/* Contact Section */}
+      <section id="contact" className="py-24 max-w-7xl mx-auto px-6 border-t border-white/10">
+        <motion.div 
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="glass rounded-3xl p-12 md:p-20 relative overflow-hidden"
+        >
+          <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-blue-500/10 via-transparent to-transparent -z-10" />
+          
+          <div className="grid md:grid-cols-2 gap-16">
+            <div className="space-y-8">
+              <h2 className="text-4xl font-bold text-white tracking-tight">Let's Talk — We're Ready to Help.</h2>
+              <p className="text-white/40 leading-relaxed text-lg">
+                Have a question? Ready to get started? Reach out and we'll get back to you within 24 hours.
+              </p>
+              <div className="space-y-6 pt-6">
+                <div className="flex items-center gap-4 text-white/80">
+                  <div className="w-12 h-12 glass rounded-xl flex items-center justify-center text-blue-400">
+                    <MessageCircle className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <div className="text-sm font-bold uppercase tracking-widest text-white/40">WhatsApp</div>
+                    <div className="text-lg font-semibold">+92 340 3516101</div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-4 text-white/80">
+                  <div className="w-12 h-12 glass rounded-xl flex items-center justify-center text-blue-400">
+                    <Zap className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <div className="text-sm font-bold uppercase tracking-widest text-white/40">Response Time</div>
+                    <div className="text-lg font-semibold">Under 2 hours</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <form className="space-y-4">
+              <input 
+                type="text" 
+                placeholder="Full Name" 
+                className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-white focus:outline-none focus:border-blue-500 transition-colors"
+              />
+              <input 
+                type="email" 
+                placeholder="Email Address" 
+                className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-white focus:outline-none focus:border-blue-500 transition-colors"
+              />
+              <textarea 
+                placeholder="How can we help?" 
+                rows={4}
+                className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-white focus:outline-none focus:border-blue-500 transition-colors resize-none"
+              ></textarea>
+              <button 
+                type="button"
+                className="w-full bg-blue-600 hover:bg-blue-500 text-white py-5 rounded-2xl font-bold shadow-xl shadow-blue-900/30 transition-all flex items-center justify-center gap-3"
+              >
+                Send Message <ArrowRight className="w-5 h-5" />
+              </button>
+            </form>
+          </div>
+        </motion.div>
       </section>
 
       {/* Footer */}

@@ -42,6 +42,175 @@ interface FeatureProps {
 
 // --- Components ---
 
+const ImpactSlideshow = () => {
+  const images = [
+    { url: "https://images.unsplash.com/photo-1611162617474-5b21e879e113", title: "Social Media Management", label: "Core Service" },
+    { url: "https://images.unsplash.com/photo-1460925895917-afdab827c52f", title: "Data-Driven Viral Growth", label: "Algorithmic Insights" },
+    { url: "https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0", title: "Content Creation Lab", label: "Visual Authority" },
+    { url: "https://images.unsplash.com/photo-1551434678-e076c223a692", title: "Strategic Campaigns", label: "Market Dominance" },
+    { url: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0", title: "Brand Optimization", label: "Identity Scale" },
+    { url: "https://images.unsplash.com/photo-1557838923-2985c318be48", title: "Ad Placement Strategy", label: "ROI Focused" },
+    { url: "https://images.unsplash.com/photo-1552664730-d307ca884978", title: "Consultancy & Planning", label: "Global Standards" },
+    { url: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f", title: "Creative Direction", label: "Next-Gen Media" },
+    { url: "https://images.unsplash.com/photo-1533750349088-cd871a92f312", title: "Full Scale Deployment", label: "Execution Peak" },
+    { url: "https://images.unsplash.com/photo-1626785774573-4b799315345d", title: "WHS Systems Power", label: "Engineered Success" }
+  ];
+
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setIndex((prev) => (prev + 1) % images.length);
+    }, 4500);
+    return () => clearInterval(timer);
+  }, [images.length]);
+
+  return (
+    <div className="relative w-full h-[500px] md:h-[600px] overflow-hidden rounded-[3rem] glass border border-white/10 group">
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={index}
+          initial={{ opacity: 0, scale: 1.1 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.95 }}
+          transition={{ duration: 0.8, ease: "easeInOut" }}
+          className="absolute inset-0"
+        >
+          <img 
+            src={`${images[index].url}?auto=format&fit=crop&q=80&w=1600`} 
+            alt={images[index].title} 
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30" />
+          
+          {/* Animated "WHS" Branding Overlay for the specific poster request */}
+          {index === 2 && (
+            <div className="absolute inset-x-0 top-[40%] flex justify-center pointer-events-none">
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="bg-white/10 backdrop-blur-3xl px-12 py-6 rounded-2xl border border-white/20 shadow-2xl"
+              >
+                <div className="text-6xl md:text-8xl font-black text-white tracking-[0.2em]">WHS</div>
+                <div className="text-center text-blue-400 font-mono text-xs uppercase tracking-[0.3em] mt-2">Systems Worldwide</div>
+              </motion.div>
+            </div>
+          )}
+
+          <div className="absolute bottom-12 left-12 right-12 flex justify-between items-end">
+            <div className="space-y-2">
+              <motion.div 
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                key={`label-${index}`}
+                className="text-blue-400 font-mono text-xs uppercase tracking-[0.3em] font-bold"
+              >
+                {images[index].label}
+              </motion.div>
+              <motion.h3 
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                key={`title-${index}`}
+                className="text-3xl md:text-5xl font-bold text-white tracking-tight"
+              >
+                {images[index].title}
+              </motion.h3>
+            </div>
+            
+            <div className="flex gap-2">
+              {images.map((_, i) => (
+                <div 
+                  key={i} 
+                  className={`h-1 transition-all duration-500 rounded-full ${i === index ? 'w-8 bg-blue-500' : 'w-2 bg-white/20'}`}
+                />
+              ))}
+            </div>
+          </div>
+        </motion.div>
+      </AnimatePresence>
+    </div>
+  );
+};
+
+const AutoImageSlider = ({ images, height = "h-80" }: { images: { url: string; title: string; desc?: string; label?: string }[], height?: string }) => {
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setIndex((prev) => (prev + 1) % images.length);
+    }, 4500);
+    return () => clearInterval(timer);
+  }, [images.length]);
+
+  return (
+    <div className={`relative ${height} rounded-3xl overflow-hidden glass border border-white/10 group`}>
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={index}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 1 }}
+          className="absolute inset-0"
+        >
+          <img 
+            src={`${images[index].url}?auto=format&fit=crop&q=80&w=800`} 
+            alt={images[index].title} 
+            className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent p-8 flex flex-col justify-end">
+            {images[index].label && (
+              <div className="text-blue-400 font-mono text-xs uppercase tracking-widest mb-2 font-bold">{images[index].label}</div>
+            )}
+            <h3 className="text-2xl font-bold text-white">{images[index].title}</h3>
+            {images[index].desc && (
+              <p className="text-white/60 text-sm mt-2 max-w-md">{images[index].desc}</p>
+            )}
+          </div>
+        </motion.div>
+      </AnimatePresence>
+    </div>
+  );
+};
+
+const TestimonialGallery = () => {
+  const reviews = [
+    { text: "My account reach jumped 400% in just 2 weeks. Simply incredible!", author: "@alex_creatives", color: "from-blue-500/20" },
+    { text: "Finally found a team that understands platform algorithms. Top tier service.", author: "@dubai_lifestyle", color: "from-indigo-500/20" },
+    { text: "WHS helped me monetize my hobby. I'm now full-time on social media!", author: "@chef_sara", color: "from-purple-500/20" },
+    { text: "Professional, reliable, and results-driven. Highly recommended for any brand.", author: "@tech_insights", color: "from-cyan-500/20" },
+    { text: "The engagement rates we're seeing now are unlike anything before. WHS is the real deal.", author: "@market_guru", color: "from-blue-600/20" },
+    { text: "From zero to viral in 30 days. Their strategy is pure math and magic.", author: "@viral_vibe", color: "from-emerald-500/20" }
+  ];
+
+  return (
+    <div className="md:col-span-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {reviews.map((msg, i) => (
+        <motion.div
+          key={i}
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, delay: i * 0.1 }}
+          className={`p-6 rounded-2xl glass border border-white/10 bg-gradient-to-br ${msg.color} to-transparent relative overflow-hidden group`}
+        >
+          <div className="relative z-10">
+            <div className="flex gap-1 mb-4">
+              {[...Array(5)].map((_, star) => (
+                <Zap key={star} className="w-3 h-3 text-yellow-500 fill-yellow-500" />
+              ))}
+            </div>
+            <p className="text-white/80 text-sm italic mb-4 leading-relaxed">"{msg.text}"</p>
+            <div className="text-white font-bold text-xs">{msg.author}</div>
+            <div className="text-blue-400 text-[10px] mt-1 font-mono uppercase tracking-tighter">Verified Creator</div>
+          </div>
+          <MessageCircle className="absolute -bottom-2 -right-2 w-12 h-12 text-white/5 group-hover:text-white/10 transition-colors" />
+        </motion.div>
+      ))}
+    </div>
+  );
+};
+
 const BackgroundIcons = () => {
   const icons = [
     <Facebook className="w-4 h-4" />,
@@ -214,13 +383,14 @@ const ProfileSection = () => {
       {/* Main Profile with Glass Effect */}
       <div className="absolute inset-0 rounded-full p-4 bg-white/5 backdrop-blur-md border border-white/20 shadow-[0_0_50px_rgba(37,99,235,0.2)]">
         <div className="w-full h-full rounded-full overflow-hidden border-2 border-white/20 bg-slate-800 group relative">
-          <img 
-            src="/profile.jpg" 
-            alt="WHS Founder" 
-            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-            onError={(e) => {
-              (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=400";
-            }}
+          <AutoImageSlider 
+            height="h-full"
+            images={[
+              { url: "https://images.unsplash.com/photo-1611162617474-5b21e879e113", title: "" },
+              { url: "https://images.unsplash.com/photo-1460925895917-afdab827c52f", title: "" },
+              { url: "https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0", title: "" },
+              { url: "https://images.unsplash.com/photo-1551434678-e076c223a692", title: "" }
+            ]}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-blue-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
         </div>
@@ -338,15 +508,16 @@ const Navbar = () => {
 
 const FeatureCard = ({ service, delay = 0, onClick }: FeatureProps) => (
   <motion.div 
-    initial={{ opacity: 0, y: 20 }}
+    initial={{ opacity: 0, y: 30 }}
     whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true }}
+    viewport={{ once: true, margin: "-50px" }}
     transition={{ 
-      duration: 0.5,
-      delay 
+      duration: 0.8,
+      delay,
+      ease: [0.16, 1, 0.3, 1] // Custom spring-like ease
     }}
     whileHover={{ 
-      y: -10, 
+      y: -15, 
       scale: 1.02,
       rotateX: 2,
       rotateY: -2,
@@ -584,11 +755,12 @@ export default function App() {
 
       {/* About Section */}
       <section id="about" className="py-24 max-w-7xl mx-auto px-6 border-t border-white/10">
-        <div className="grid md:grid-cols-2 gap-16 items-center">
+        <div className="flex flex-col items-center text-center max-w-3xl mx-auto mb-20">
           <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
             className="space-y-8"
           >
             <h2 className="text-4xl md:text-5xl font-bold text-white tracking-tight leading-tight">
@@ -614,33 +786,69 @@ export default function App() {
               </div>
             </div>
           </motion.div>
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1 }}
-            className="relative group"
-          >
-            <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-3xl blur opacity-25 group-hover:opacity-50 transition duration-1000"></div>
-            <div className="relative glass rounded-3xl p-1 overflow-hidden">
-               <img 
-                 src="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&q=80&w=800" 
-                 alt="Dubai skyline" 
-                 className="w-full h-[400px] object-cover rounded-2xl"
-               />
-            </div>
-          </motion.div>
         </div>
+
+        {/* New Visual Gallery & Success Stories */}
+        <div className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* Dubai Story Slider */}
+          <div className="md:col-span-2">
+            <AutoImageSlider 
+              images={[
+                { 
+                  url: "https://images.unsplash.com/photo-1512453979798-5ea266f8880c", 
+                  title: "Dubai Headquarters", 
+                  label: "Founding Hub",
+                  desc: "Operating from the heart of the world's digital economy." 
+                },
+                { 
+                  url: "https://images.unsplash.com/photo-1526431893694-9a0b69a55a80", 
+                  title: "Global Connectivity", 
+                  label: "Strategic Reach",
+                  desc: "Bridging the gap between creators and global markets." 
+                }
+              ]} 
+            />
+          </div>
+
+          {/* Professional Office Slider */}
+          <AutoImageSlider 
+            images={[
+              { 
+                url: "https://images.unsplash.com/photo-1497366216548-37526070297c", 
+                title: "Innovation Lab", 
+                label: "WHS Office",
+                desc: "Where viral strategies are engineered."
+              },
+              { 
+                url: "https://images.unsplash.com/photo-1497215728101-856f4ea42174", 
+                title: "Scale Studio", 
+                label: "Performance Center",
+                desc: "Optimizing reach every single second."
+              }
+            ]} 
+          />
+
+          {/* Testimonials / Messages Gallery */}
+          <TestimonialGallery />
+        </div>
+      </section>
+
+      {/* Cinematic Impact Slideshow */}
+      <section className="py-12 max-w-7xl mx-auto px-6">
+        <ImpactSlideshow />
       </section>
 
       {/* Contact Section */}
       <section id="contact" className="py-24 max-w-7xl mx-auto px-6 border-t border-white/10">
         <motion.div 
-          initial={{ opacity: 0, y: 40 }}
+          initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="glass rounded-3xl p-12 md:p-20 relative overflow-hidden"
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ 
+            duration: 1,
+            ease: [0.16, 1, 0.3, 1]
+          }}
+          className="glass rounded-3xl p-12 md:p-20 relative overflow-hidden shadow-[0_0_50px_rgba(37,99,235,0.1)]"
         >
           <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-blue-500/10 via-transparent to-transparent -z-10" />
           
@@ -651,15 +859,20 @@ export default function App() {
                 Have a question? Ready to get started? Reach out and we'll get back to you within 24 hours.
               </p>
               <div className="space-y-6 pt-6">
-                <div className="flex items-center gap-4 text-white/80">
-                  <div className="w-12 h-12 glass rounded-xl flex items-center justify-center text-blue-400">
+                <a 
+                  href="https://wa.me/923403516101"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-4 text-white/80 hover:text-green-400 transition-colors group"
+                >
+                  <div className="w-12 h-12 glass rounded-xl flex items-center justify-center text-blue-400 group-hover:text-green-400 group-hover:scale-110 transition-all">
                     <MessageCircle className="w-6 h-6" />
                   </div>
                   <div>
-                    <div className="text-sm font-bold uppercase tracking-widest text-white/40">WhatsApp</div>
+                    <div className="text-sm font-bold uppercase tracking-widest text-white/40 group-hover:text-green-400/60 transition-colors">WhatsApp</div>
                     <div className="text-lg font-semibold">+92 340 3516101</div>
                   </div>
-                </div>
+                </a>
                 <div className="flex items-center gap-4 text-white/80">
                   <div className="w-12 h-12 glass rounded-xl flex items-center justify-center text-blue-400">
                     <Zap className="w-6 h-6" />
@@ -667,6 +880,34 @@ export default function App() {
                   <div>
                     <div className="text-sm font-bold uppercase tracking-widest text-white/40">Response Time</div>
                     <div className="text-lg font-semibold">Under 2 hours</div>
+                  </div>
+                </div>
+
+                {/* Social Quick Connect Panel */}
+                <div className="pt-8 border-t border-white/5">
+                  <div className="text-xs font-bold uppercase tracking-widest text-white/30 mb-6 font-mono">Instant Channels</div>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                    {[
+                      { icon: <MessageCircle className="w-6 h-6" />, label: "WhatsApp", color: "hover:text-green-400", bg: "hover:bg-green-500/10", link: "https://wa.me/923403516101" },
+                      { icon: <Facebook className="w-6 h-6" />, label: "Facebook", color: "hover:text-blue-500", bg: "hover:bg-blue-600/10", link: "https://facebook.com/WHS_Systems" },
+                      { icon: <Instagram className="w-6 h-6" />, label: "Instagram", color: "hover:text-pink-500", bg: "hover:bg-pink-600/10", link: "https://instagram.com/WHS_Systems" },
+                      { icon: <Youtube className="w-6 h-6" />, label: "YouTube", color: "hover:text-red-500", bg: "hover:bg-red-600/10", link: "https://youtube.com/WHS_Systems" }
+                    ].map((item, i) => (
+                      <motion.a
+                        key={i}
+                        href={item.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        whileHover={{ y: -5, scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        className={`glass p-4 rounded-2xl flex flex-col items-center justify-center gap-3 border border-white/5 transition-all group ${item.bg} ${item.color}`}
+                      >
+                        <div className="text-white/60 group-hover:text-inherit transition-colors">
+                          {item.icon}
+                        </div>
+                        <span className="text-[10px] font-bold uppercase tracking-widest text-white/40 group-hover:text-white transition-colors">{item.label}</span>
+                      </motion.a>
+                    ))}
                   </div>
                 </div>
               </div>

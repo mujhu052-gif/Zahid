@@ -221,34 +221,42 @@ const BackgroundIcons = () => {
   ];
 
   return (
-    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden opacity-20">
-      {[...Array(30)].map((_, i) => (
-        <motion.div
-          key={i}
-          initial={{ 
-            x: Math.random() * 100 + '%', 
-            y: Math.random() * 100 + '%',
-            opacity: 0 
-          }}
-          animate={{ 
-            x: [null, Math.random() * 100 + '%'], 
-            y: [null, Math.random() * 100 + '%'],
-            opacity: [0, 0.4, 0],
-            rotate: [0, 360]
-          }}
-          transition={{ 
-            duration: 15 + Math.random() * 25, 
-            repeat: Infinity, 
-            ease: "linear" 
-          }}
-          className="absolute"
-        >
-          <div className="p-1.5 glass rounded-lg border border-white/10">
-            {icons[i % icons.length]}
-          </div>
-        </motion.div>
-      ))}
-    </div>
+    <>
+      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden opacity-20">
+        {[...Array(30)].map((_, i) => (
+          <motion.div
+            key={i}
+            initial={{ 
+              x: Math.random() * 100 + '%', 
+              y: Math.random() * 100 + '%',
+              opacity: 0 
+            }}
+            animate={{ 
+              x: [null, Math.random() * 100 + '%'], 
+              y: [null, Math.random() * 100 + '%'],
+              opacity: [0, 0.4, 0],
+              rotate: [0, 360]
+            }}
+            transition={{ 
+              duration: 15 + Math.random() * 25, 
+              repeat: Infinity, 
+              ease: "linear" 
+            }}
+            className="absolute"
+          >
+            <div className="p-1.5 glass rounded-lg border border-white/10">
+              {icons[i % icons.length]}
+            </div>
+          </motion.div>
+        ))}
+      </div>
+      {/* Background Mesh Gradients - Moved to fixed for stability */}
+      <div className="fixed inset-0 pointer-events-none -z-10 overflow-hidden">
+        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-blue-600/20 rounded-full blur-[120px]"></div>
+        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-indigo-700/20 rounded-full blur-[100px]"></div>
+        <div className="absolute top-[20%] right-[10%] w-[30%] h-[30%] bg-purple-600/15 rounded-full blur-[80px]"></div>
+      </div>
+    </>
   );
 };
 
@@ -266,39 +274,43 @@ const ServiceModal = ({
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-6">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-2 sm:p-4 md:p-6">
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="absolute inset-0 bg-slate-950/80 backdrop-blur-sm"
+            className="absolute inset-0 bg-slate-950/90 backdrop-blur-md"
           />
           <motion.div
-            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+            initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="relative w-full max-w-2xl bg-slate-900 border border-white/20 rounded-3xl overflow-hidden shadow-2xl"
+            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+            className="relative w-full max-w-2xl bg-slate-900 border border-white/20 rounded-[2.5rem] overflow-hidden shadow-2xl max-h-[90vh] flex flex-col"
           >
-            <button 
-              onClick={onClose}
-              className="absolute top-6 right-6 text-white/50 hover:text-white transition-colors"
-            >
-              <X className="w-6 h-6" />
-            </button>
+            {/* Sticky Header with Close Button */}
+            <div className="sticky top-0 z-20 bg-slate-900/80 backdrop-blur-xl border-b border-white/5 p-4 flex justify-end">
+              <button 
+                onClick={onClose}
+                className="w-10 h-10 glass rounded-full flex items-center justify-center text-white/50 hover:text-red-400 hover:border-red-500/50 transition-all"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
 
-            <div className="p-8 md:p-12">
+            {/* Scrollable Content Area */}
+            <div className="p-6 sm:p-8 md:p-12 overflow-y-auto custom-scrollbar flex-1">
               <div className="w-16 h-16 bg-blue-500/20 rounded-2xl flex items-center justify-center mb-8 text-blue-400">
                 {service.icon}
               </div>
               
-              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4 tracking-tight">
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4 tracking-tight leading-tight">
                 {service.title}
               </h2>
               
               <div className="flex items-center gap-2 mb-8">
                 <span className="text-emerald-400 font-bold text-2xl">{service.price}</span>
-                <span className="text-white/40 text-sm font-mono uppercase tracking-widest mt-1">Starting Demo Price</span>
+                <span className="text-white/40 text-sm font-mono uppercase tracking-widest mt-1">Founding Price</span>
               </div>
 
               <div className="space-y-6 mb-10">
@@ -306,17 +318,18 @@ const ServiceModal = ({
                   {service.fullDesc}
                 </p>
                 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                   {service.benefits.map((benefit, i) => (
-                    <div key={i} className="flex items-center gap-3 text-sm text-white/60 bg-white/5 p-3 rounded-xl border border-white/5">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
+                    <div key={i} className="flex items-center gap-3 text-sm text-white/60 bg-white/5 p-3 rounded-xl border border-white/5 group hover:border-blue-500/30 transition-colors">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 group-hover:scale-110 transition-transform" />
                       {benefit}
                     </div>
                   ))}
                 </div>
               </div>
 
-              <div className="flex flex-col sm:flex-row gap-4">
+              {/* Action Buttons */}
+              <div className="flex flex-col sm:flex-row gap-4 mb-4">
                 <a 
                   href={`https://wa.me/923403516101?text=Hi, I am interested in ${encodeURIComponent(service.title)}. Can you help me?`}
                   target="_blank"
@@ -328,9 +341,9 @@ const ServiceModal = ({
                 </a>
                 <button 
                   onClick={onClose}
-                  className="px-8 py-4 bg-white/5 hover:bg-white/10 text-white rounded-xl font-bold border border-white/10 transition-all"
+                  className="px-8 py-4 bg-white/5 hover:bg-white/10 text-white rounded-xl font-bold border border-white/10 transition-all sm:w-auto"
                 >
-                  Close Details
+                  Close
                 </button>
               </div>
             </div>
@@ -465,7 +478,7 @@ const Navbar = () => {
           {['Home', 'Services', 'About', 'Contact'].map((item) => (
             <a 
               key={item} 
-              href={item === 'Home' ? '#' : `#${item.toLowerCase()}`} 
+              href={item === 'Home' ? '#home' : `#${item.toLowerCase()}`} 
               className="text-white/70 hover:text-white transition-colors"
             >
               {item}
@@ -487,13 +500,13 @@ const Navbar = () => {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="md:hidden fixed inset-x-0 top-[72px] bg-slate-900 border-b border-slate-800 p-6 flex flex-col gap-4 shadow-2xl z-[100]"
+            className="md:hidden fixed inset-x-0 top-[72px] bg-slate-950 border-b border-white/10 p-6 flex flex-col gap-4 shadow-2xl z-[100] backdrop-blur-xl"
           >
             {['Home', 'Services', 'About', 'Contact'].map((item) => (
               <a 
                 key={item} 
-                href={item === 'Home' ? '#' : `#${item.toLowerCase()}`} 
-                className="text-lg font-medium text-slate-300" 
+                href={item === 'Home' ? '#home' : `#${item.toLowerCase()}`} 
+                className="text-lg font-medium text-white/80 hover:text-white" 
                 onClick={() => setIsOpen(false)}
               >
                 {item}
@@ -570,6 +583,27 @@ export default function App() {
   const [selectedService, setSelectedService] = useState<ServiceDetail | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  // Handle Browser Back Button for Modal
+  useEffect(() => {
+    const handlePopState = () => {
+      if (isModalOpen) {
+        setIsModalOpen(false);
+        // Sync history by pushing a null state so back button behaves correctly for next use
+        window.history.pushState(null, "");
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, [isModalOpen]);
+
+  useEffect(() => {
+    if (isModalOpen) {
+      // Push state when modal is opened to intercept the back button
+      window.history.pushState({ modalOpen: true }, "");
+    }
+  }, [isModalOpen]);
+
   const services: ServiceDetail[] = [
     {
       id: 'tiktok',
@@ -631,23 +665,26 @@ export default function App() {
     setSelectedService(service);
     setIsModalOpen(true);
   };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    if (window.history.state?.modalOpen) {
+      window.history.back();
+    }
+  };
   return (
-    <div className="min-h-screen relative overflow-hidden bg-slate-900 text-white selection:bg-blue-500/30">
+    <div className="min-h-screen relative overflow-x-hidden bg-slate-900 text-white selection:bg-blue-500/30 scroll-smooth">
       <BackgroundIcons />
-      {/* Background Mesh Gradients */}
-      <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-blue-600/30 rounded-full blur-[120px] -z-10"></div>
-      <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-indigo-700/30 rounded-full blur-[100px] -z-10"></div>
-      <div className="absolute top-[20%] right-[10%] w-[30%] h-[30%] bg-purple-600/20 rounded-full blur-[80px] -z-10"></div>
 
       <Navbar />
       <ServiceModal 
         service={selectedService} 
         isOpen={isModalOpen} 
-        onClose={() => setIsModalOpen(false)} 
+        onClose={handleCloseModal} 
       />
 
       {/* Hero Section */}
-      <section className="relative pt-40 pb-20">
+      <section id="home" className="relative pt-40 pb-20 scroll-mt-24">
         <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
           <motion.div
             initial={{ opacity: 0, x: -30 }}
@@ -723,7 +760,7 @@ export default function App() {
       </section>
 
       {/* Services Section */}
-      <section id="services" className="py-24 max-w-7xl mx-auto px-6 border-t border-white/10">
+      <section id="services" className="py-24 max-w-7xl mx-auto px-6 border-t border-white/10 scroll-mt-24">
         <div className="mb-16 text-center max-w-2xl mx-auto">
           <h2 className="text-3xl md:text-5xl font-bold text-white mb-6 tracking-tight leading-[1.1]">Our Services</h2>
           <p className="text-white/40 leading-relaxed text-lg">Premium social media growth and monetization solutions tailored for Dubai's creators.</p>
@@ -754,7 +791,7 @@ export default function App() {
       </section>
 
       {/* About Section */}
-      <section id="about" className="py-24 max-w-7xl mx-auto px-6 border-t border-white/10">
+      <section id="about" className="py-24 max-w-7xl mx-auto px-6 border-t border-white/10 scroll-mt-24">
         <div className="flex flex-col items-center text-center max-w-3xl mx-auto mb-20">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -839,7 +876,7 @@ export default function App() {
       </section>
 
       {/* Contact Section */}
-      <section id="contact" className="py-24 max-w-7xl mx-auto px-6 border-t border-white/10">
+      <section id="contact" className="py-24 max-w-7xl mx-auto px-6 border-t border-white/10 scroll-mt-24">
         <motion.div 
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
